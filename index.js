@@ -31,11 +31,8 @@ app.use(require('cors')())
 
 
 // Check Authentication:
-// app.use(require('./src/middlewares/authentication'))
+app.use(require('./src/middlewares/authentication'))
 
-
-// res.getModelList():
-app.use(require('./src/middlewares/findSearchSortPage'))
 
 /* ------------------------------------------------------- */
 // Routes:

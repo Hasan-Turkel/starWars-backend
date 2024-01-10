@@ -1,35 +1,29 @@
-"use strict"
+"use strict";
 
-
-const User = require('../models/user')
-const Token = require('../models/token')
-const passwordEncrypt = require('../helpers/passwordEncrypt')
+const User = require("../models/user");
+const Token = require("../models/token");
+const passwordEncrypt = require("../helpers/passwordEncrypt");
 
 module.exports = {
-
-    list: async (req, res) => {
-        /*
+  list: async (req, res) => {
+    /*
             #swagger.tags = ["Users"]
             #swagger.summary = "List Users"
             
         */
-        
-        const filters = (req.user?.is_superadmin) ? {} : { _id: req.user?._id }
-        
-        const data = await res.getModelList(User, filters)
 
-        // res.status(200).send({
-        //     error: false,
-        //     details: await res.getModelListDetails(User),
-        //     data
-        // })
+    const filters = req.user?.is_superadmin ? {} : { _id: req.user?._id };
 
-        // FOR REACT PROJECT:
-        res.status(200).send(data)
-    },
+    const data = await User.find(filters);
 
-    create: async (req, res) => {
-        /*
+    res.status(200).send({
+      error: false,
+      data,
+    });
+  },
+
+  create: async (req, res) => {
+    /*
             #swagger.tags = ["Users"]
             #swagger.summary = "Create User"
             #swagger.parameters['body'] = {
@@ -44,50 +38,43 @@ module.exports = {
             }
         */
 
-        // Disallow setting admin
-      
-        req.body.is_superadmin = false
+    // Disallow setting admin
 
-        const data = await User.create(req.body)
+    // req.body.is_superadmin = false
 
-        // Create token for auto-login:
-        const tokenData = await Token.create({
-            user_id: data._id,
-            token: passwordEncrypt(data._id + Date.now())
-        })
+    const data = await User.create(req.body);
 
-        // res.status(201).send({
-        //     error: false,
-        //     token: tokenData.token,
-        //     data
-        // })
+    // Create token for auto-login:
+    const tokenData = await Token.create({
+      user_id: data._id,
+      token: passwordEncrypt(data._id + Date.now()),
+    });
 
-        // FOR REACT PROJECT:
-        res.status(201).send({
-            error: false,
-            token: tokenData.token,
-            ...data._doc
-        })
-    },
+    res.status(201).send({
+      error: false,
+      token: tokenData.token,
+      ...data._doc,
+    });
+  },
 
-    read: async (req, res) => {
-        /*
+  read: async (req, res) => {
+    /*
             #swagger.tags = ["Users"]
             #swagger.summary = "Get Single User"
         */
 
-        const filters = (req.user?.is_superadmin) ? { _id: req.params.id } : { _id: req.user._id }
+    // const filters = (req.user?.is_superadmin) ? { _id: req.params.id } : { _id: req.user._id }
 
-        const data = await User.findOne(filters)
+    const data = await User.findOne({ _id: req.params.id });
 
-        res.status(200).send({
-            error: false,
-            data
-        })
-    },
+    res.status(200).send({
+      error: false,
+      data,
+    });
+  },
 
-    update: async (req, res) => {
-        /*
+  update: async (req, res) => {
+    /*
             #swagger.tags = ["Users"]
             #swagger.summary = "Update User"
             #swagger.parameters['body'] = {
@@ -102,31 +89,87 @@ module.exports = {
             }
         */
 
-        const filters = (req.user?.is_superadmin) ? { _id: req.params.id } : { _id: req.user._id }
-        req.body.is_superadmin = (req.user?.is_superadmin) ? req.body.is_superadmin : false
+    // const filters = (req.user?.is_superadmin) ? { _id: req.params.id } : { _id: req.user._id }
+    req.body.is_superadmin = req.user?.is_superadmin
+      ? req.body.is_superadmin
+      : false;
 
-        const data = await User.updateOne(filters, req.body, { runValidators: true })
+    if (req.body.key) {
+      const user = await User.findOne({ _id: req.params.id });
 
-        res.status(202).send({
+      if (req.body.key == "people") {
+        const filteredPeople = user.people.filter(
+          (item) => item.name == req.body.character.name
+        );
+
+        if (filteredPeople.length) {
+          throw new Error("The people already in your favorites");
+        } else {
+          user.people.push(req.body.character);
+          const data = await User.updateOne(
+            { _id: req.params.id },
+            { people: user.people },
+            { runValidators: true }
+          );
+          res.status(202).send({
             error: false,
             data,
-            new: await User.findOne(filters)
-        })
-    },
+            new: await User.findOne({ _id: req.params.id }),
+          });
+        }
+      } else if (req.body.key == "planets") {
 
-    delete: async (req, res) => {
-        /*
+       
+        const filteredPlanets = user.planets.filter(
+          (item) => item.name == req.body.planet.name
+        );
+
+        if (filteredPlanets.length) {
+          throw new Error("The planet already in your favorites");
+        } else {
+
+          console.log(req.body.planet);
+          user.planets.push(req.body.planet);
+          const data = await User.updateOne(
+            { _id: req.params.id },
+            { planets: user.planets },
+            { runValidators: true }
+          );
+          res.status(202).send({
+            error: false,
+            data,
+            new: await User.findOne({ _id: req.params.id }),
+          });
+        }
+      }
+    } else {
+      const data = await User.updateOne(filters, req.body, {
+        runValidators: true,
+      });
+
+      res.status(202).send({
+        error: false,
+        data,
+        new: await User.findOne(),
+      });
+    }
+  },
+
+  delete: async (req, res) => {
+    /*
             #swagger.tags = ["Users"]
             #swagger.summary = "Delete User"
         */
 
-        const filters = (req.user?.is_superadmin) ? { _id: req.params.id } : { _id: req.user._id }
+    const filters = req.user?.is_superadmin
+      ? { _id: req.params.id }
+      : { _id: req.user._id };
 
-        const data = await User.deleteOne(filters)
+    const data = await User.deleteOne(filters);
 
-        res.status(data.deletedCount ? 204 : 404).send({
-            error: !data.deletedCount,
-            data
-        })
-    },
-}
+    res.status(data.deletedCount ? 204 : 404).send({
+      error: !data.deletedCount,
+      data,
+    });
+  },
+};

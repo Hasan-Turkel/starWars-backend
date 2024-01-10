@@ -4,12 +4,10 @@ const router = require('express').Router()
 /* ------------------------------------------------------- */
 // routes/user:
 
-const { isAdmin } = require('../middlewares/permissions')
+const { isAdmin, isLogin } = require('../middlewares/permissions')
 const user = require('../controllers/user')
 
 // URL: /users
-
-router.use(isAdmin)
 
 router.route('/')
     .get(user.list)

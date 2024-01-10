@@ -31,8 +31,6 @@ module.exports = {
 
             if (user && user.password == passwordEncrypt(password)) {
 
-                if (user.is_active) {
-
 
                     // TOKEN:
                     let tokenData = await Token.findOne({ user_id: user._id })
@@ -48,12 +46,6 @@ module.exports = {
                         // token: tokenData.token,
                         user,
                     })
-
-                } else {
-
-                    res.errorStatusCode = 401
-                    throw new Error('This account is not active.')
-                }
             } else {
 
                 res.errorStatusCode = 401

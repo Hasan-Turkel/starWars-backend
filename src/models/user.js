@@ -6,10 +6,6 @@ const { mongoose } = require('../configs/dbConnection')
     "username": "admin",
     "password": "aA*123456",
     "email": "admin@site.com",
-    "first_name": "admin",
-    "last_name": "admin",
-    "is_active": true,
-    "is_staff": true,
     "is_superadmin": true
 }
 
@@ -17,10 +13,6 @@ const { mongoose } = require('../configs/dbConnection')
     "username": "test",
     "password": "aA*123456",
     "email": "test@site.com",
-    "first_name": "test",
-    "last_name": "test",
-    "is_active": true,
-    "is_staff": false,
     "is_superadmin": false
 }
 /* ------------------------------------------------------- */
@@ -54,6 +46,9 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    people:[],
+
+    planets:[],
 
 }, { collection: 'users', timestamps: true })
 
