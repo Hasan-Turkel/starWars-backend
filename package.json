@@ -1,0 +1,27 @@
+{
+  "title": "Stock Management API",
+  "name": "stockapi",
+  "version": "1.0.0",
+  "description": "Stock Management System",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "debug": "DEBUG=* nodemon"
+  },
+  "keywords": [],
+  "author": "Hasan Turkel",
+  "license": "ISC Licence",
+  "dependencies": {
+    "axios": "^1.6.5",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "fs": "^0.0.1-security",
+    "mongoose": "^7.6.2",
+    "redoc-express": "^2.1.0",
+    "swagger-autogen": "^2.23.6",
+    "swagger-ui-express": "^5.0.0"
+  }
+}
