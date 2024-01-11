@@ -6,8 +6,8 @@ module.exports = {
 
     list: async (req, res) => {
         /*
-            #swagger.tags = ["Users"]
-            #swagger.summary = "List Users"
+            #swagger.tags = ["Planets"]
+            #swagger.summary = "List Planets"
             
         */
            
@@ -19,17 +19,14 @@ module.exports = {
             
             })
        
-
-        // FOR REACT PROJECT:
-        // res.status(200).send(data)
     },
 
   
 
     read: async (req, res) => {
         /*
-            #swagger.tags = ["Users"]
-            #swagger.summary = "Get Single User"
+            #swagger.tags = ["Planets"]
+            #swagger.summary = "Get Single Planet"
         */
 
         const {data} = await axios(`https://swapi.dev/api/planets/${req.params.id}/ `)

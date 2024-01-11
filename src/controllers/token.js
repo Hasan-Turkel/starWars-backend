@@ -11,16 +11,14 @@ module.exports = {
             #swagger.ignore = true
         */
 
-        const data = await res.getModelList(Token)
+        const data = await Token.find()
 
-        // res.status(200).send({
-        //     error: false,
-        //     details: await res.getModelListDetails(Token),
-        //     data
-        // })
+        res.status(200).send({
+            error: false,
+            data
+        })
         
-        // FOR REACT PROJECT:
-        res.status(200).send(data)
+    
     },
 
     create: async (req, res) => {

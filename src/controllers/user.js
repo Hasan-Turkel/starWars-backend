@@ -40,7 +40,7 @@ module.exports = {
 
     // Disallow setting admin
 
-    // req.body.is_superadmin = false
+    req.body.is_superadmin = false
 
     const data = await User.create(req.body);
 
@@ -63,9 +63,9 @@ module.exports = {
             #swagger.summary = "Get Single User"
         */
 
-    // const filters = (req.user?.is_superadmin) ? { _id: req.params.id } : { _id: req.user._id }
+    const filters = (req.user?.is_superadmin) ? { _id: req.params.id } : { _id: req.user._id }
 
-    const data = await User.findOne({ _id: req.params.id });
+    const data = await User.findOne(filters);
 
     res.status(200).send({
       error: false,
@@ -84,18 +84,20 @@ module.exports = {
                     "username": "test",
                     "password": "1234",
                     "email": "test@site.com",
+                    "people":[],
+                    "planets":[]
                   
                 }
             }
         */
 
-    // const filters = (req.user?.is_superadmin) ? { _id: req.params.id } : { _id: req.user._id }
+    const filters = (req.user?.is_superadmin) ? { _id: req.params.id } : { _id: req.user._id }
     req.body.is_superadmin = req.user?.is_superadmin
       ? req.body.is_superadmin
       : false;
 
     if (req.body.key) {
-      const user = await User.findOne({ _id: req.params.id });
+      const user = await User.findOne(filters);
 
       if (req.body.key == "people") {
         const filteredPeople = user.people.filter(
@@ -103,18 +105,18 @@ module.exports = {
         );
 
         if (filteredPeople.length) {
-          throw new Error("The people already in your favorites");
+          throw new Error("The people is already in your favorites");
         } else {
           user.people.push(req.body.character);
           const data = await User.updateOne(
-            { _id: req.params.id },
+            filters,
             { people: user.people },
             { runValidators: true }
           );
           res.status(202).send({
             error: false,
             data,
-            new: await User.findOne({ _id: req.params.id }),
+            new: await User.findOne(filters),
           });
         }
       } else if (req.body.key == "planets") {
@@ -125,20 +127,20 @@ module.exports = {
         );
 
         if (filteredPlanets.length) {
-          throw new Error("The planet already in your favorites");
+          throw new Error("The planet is already in your favorites");
         } else {
 
           console.log(req.body.planet);
           user.planets.push(req.body.planet);
           const data = await User.updateOne(
-            { _id: req.params.id },
+            filters,
             { planets: user.planets },
             { runValidators: true }
           );
           res.status(202).send({
             error: false,
             data,
-            new: await User.findOne({ _id: req.params.id }),
+            new: await User.findOne(filters),
           });
         }
       }
@@ -150,7 +152,7 @@ module.exports = {
       res.status(202).send({
         error: false,
         data,
-        new: await User.findOne(),
+        new: await User.findOne(filters),
       });
     }
   },

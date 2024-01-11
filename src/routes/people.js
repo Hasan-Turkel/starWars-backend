@@ -4,7 +4,6 @@ const router = require('express').Router()
 /* ------------------------------------------------------- */
 // routes/people:
 
-const {isAdmin} = require('../middlewares/permissions')
 const people = require('../controllers/people')
 
 // URL: /people

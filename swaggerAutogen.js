@@ -1,7 +1,5 @@
 "use strict"
-/* -------------------------------------------------------
-	EXPRESS - Personnel API
-------------------------------------------------------- */
+
 require('dotenv').config()
 const HOST = process.env?.HOST || '127.0.0.1'
 const PORT = process.env?.PORT || 8000
@@ -36,10 +34,6 @@ const document = {
 	definition: {
 		// Models:
 		"User": require('./src/models/user').schema.obj,
-		"Blog": require('./src/models/blog').schema.obj,
-		"Category": require('./src/models/category').schema.obj,
-		"Comment": require('./src/models/comment').schema.obj,
-		"Like": require('./src/models/like').schema.obj
 	}
 }
 

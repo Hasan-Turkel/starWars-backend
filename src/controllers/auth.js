@@ -17,7 +17,7 @@ module.exports = {
                 in: "body",
                 required: true,
                 schema: {
-                    "username": "test",
+                    "email": "test@email.com",
                     "password": "1234",
                 }
             }

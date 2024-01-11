@@ -4,7 +4,6 @@ const router = require('express').Router()
 /* ------------------------------------------------------- */
 // routes/planets:
 
-const {isAdmin} = require('../middlewares/permissions')
 const planets = require('../controllers/planets')
 
 // URL: /planets

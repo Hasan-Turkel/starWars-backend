@@ -93,13 +93,6 @@ UserSchema.pre(['save', 'updateOne'], function (next) {
         next(new Error('Email not validated.'))
     }
 })
-/* ------------------------------------------------------- */
-// FOR REACT PROJECT:
-UserSchema.pre('init', function (data) {
 
-    data.id = data._id
-    data.createds = data.createdAt.toLocaleDateString('tr-tr')
-})
-/* ------------------------------------------------------- */
 module.exports = mongoose.model('User', UserSchema)
 
