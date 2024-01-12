@@ -130,7 +130,6 @@ module.exports = {
           throw new Error("The planet is already in your favorites");
         } else {
 
-          console.log(req.body.planet);
           user.planets.push(req.body.planet);
           const data = await User.updateOne(
             filters,
