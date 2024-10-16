@@ -29,7 +29,6 @@ app.use(express.json())
 
 const cors = require('cors');
 
-const app = express();
 app.use(cors({
     origin: 'https://star-wars-frontend-ten.vercel.app', // İzin verilecek alan adı
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // İzin verilen HTTP yöntemleri
